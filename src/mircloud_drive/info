@@ -1,0 +1,306 @@
+TODO:
+	U svakom zahtevu provera dal je ulogovan klijent
+	Ja bih otvarao data port samo za fajlove, ne za komande
+
+Requirements: 
+	+Registracija, 
+	+Prijava, 
+	Upload datoteka na disk, 
+	Pregled diska
+
+OSNOVNI ZADATAK 60%: 
+	+Prijava na disk, 
+	+Uspesno/Neuspesno, 
+	Usp=>Srvr salje listu datoteka
+	KlijentZahtevaDatoteku, 
+	ServerVracaDatoteku, 
+	TekstualniPrikazDatoteke/base64BIN
+
+OGRANICENJA: 
+	+MultiThreaded, 
+	+KlijentMozeDaPrekineKomBiloKad, 
+	+2TipaKorisnika Obican/Premium
+ 	+UniqueUsername, 
+ 	ObicanKorisnikMaksimalno5Datoteka, 
+ 	PremiumInfinityDatoteka
+ 	
+DODATNO_1: 
+	OpcijaDeljenjaPristupa, 
+	OpcijaDeljenjaLinka-PrekoKojegCeNeregistrovaniKorisniciImatiPristupFajlovima
+
+DODATNO_2: 
+	PremiumKorisnici-KreiratiFoldere, 
+	MenjatiNazivFolderima, 
+	PrebacitiDatotekeUDrugiFolder
+	BrisatiFolderSamoUkolikoJePrazan
+
+PROTOKOL:FTP
+
+ 2.3.  THE FTP MODEL
+
+      With the above definitions in mind, the following model (shown in
+      Figure 1) may be diagrammed for an FTP service.
+
+                                            -------------
+                                            |/---------\|
+                                            ||   User  ||    --------
+                                            ||Interface|<--->| User |
+                                            |\----^----/|    --------
+                  ----------                |     |     |
+                  |/------\|  FTP Commands  |/----V----\|
+                  ||Server|<---------------->|   User  ||
+                  ||  PI  ||   FTP Replies  ||    PI   ||
+                  |\--^---/|                |\----^----/|
+                  |   |    |                |     |     |
+      --------    |/--V---\|      Data      |/----V----\|    --------
+      | File |<--->|Server|<---------------->|  User   |<--->| File |
+      |System|    || DTP  ||   Connection   ||   DTP   ||    |System|
+      --------    |\------/|                |\---------/|    --------
+                  ----------                -------------
+
+                  Server-FTP                   USER-FTP
+
+      NOTES: 1. The data connection may be used in either direction.
+             2. The data connection need not exist all of the time.
+
+
+COMMANDS:
+-Access Control Commands
+	+USER [Username]						- Send username
+	+PASS [Password]						- Send password
+	ACCT [Account] 						- Request account info
+	CWD  [ChangeWorkingDirectory]		- cd <path>
+	CDUP [ChangeToParentDirectory]		- cd ..
+	+QUIT [LOGOUT]						- exit
+
+-Transfer Parameter Commands
+	TYPE [RepresentationType]			- 
+	STRU [FileStructure]				- 
+	MODE [TransferMode]					- 
+
+-Ftp Service Commands
+	RETR [Retrieve]						- Request a file
+	STOR [Store]						- Store a file, if it exists it gets replaced
+	STOU [StoreUnique]					- Store a file, if exists create unique name
+	APPE [Append]						- Append to a file
+	RNFR [RenameFrom]					- Request renaming a file
+	RNTO [RenameTo]						- Follow RNFR with a name to which it should rename
+	ABOR [Abort]						- Abort current transfer of data
+	DELE [Delete]						- Delete a file
+	RMD  [DemoveDirectory]				- Remove directory
+	MKD  [MakeDirectory]				- Create directory
+	PWD  [PrintWorkingDirectory]		- Request path of current directory
+	LIST [List]							- List out filenames and dirnames in cwd 
+											or info about file
+	NLST [NameList]						- List only filenames in cwd
+	HELP [Help]							- Request help
+	NOOP [Noop]							- NOP instruction reply with OK
+	
+SYNTAX:
+			*USER <SP> <username> <CRLF>
+            *PASS <SP> <password> <CRLF>
+            ACCT <SP> <account-information> <CRLF>
+            CWD  <SP> <pathname> <CRLF>
+            CDUP <CRLF>
+            *QUIT <CRLF>
+            PASV <CRLF>
+            *TYPE <SP> <type-code> <CRLF>
+            *STRU <SP> <structure-code> <CRLF>
+            *MODE <SP> <mode-code> <CRLF>
+            *RETR <SP> <pathname> <CRLF>
+            *STOR <SP> <pathname> <CRLF>
+            STOU <CRLF>
+            APPE <SP> <pathname> <CRLF>
+            REST <SP> <marker> <CRLF>
+            RNFR <SP> <pathname> <CRLF>
+            RNTO <SP> <pathname> <CRLF>
+            ABOR <CRLF>
+            DELE <SP> <pathname> <CRLF>
+            RMD  <SP> <pathname> <CRLF>
+            MKD  <SP> <pathname> <CRLF>
+            PWD  <CRLF>
+            LIST [<SP> <pathname>] <CRLF>
+            NLST [<SP> <pathname>] <CRLF>
+            SYST <CRLF>
+            STAT [<SP> <pathname>] <CRLF>
+            HELP [<SP> <string>] <CRLF>
+            *NOOP <CRLF>
+	
+REPLIES:
+
+There are five values for the first digit of the reply code:
+	1yz   Positive Preliminary reply
+	2yz   Positive Completion reply
+	3yz   Positive Intermediate reply
+	4yz   Transient Negative Completion reply
+	5yz   Permanent Negative Completion reply
+
+The following function groupings are encoded in the second digit:
+	x0z   Syntax - These replies refer to syntax errors,
+          	syntactically correct commands that don't fit any
+            functional category, unimplemented or superfluous
+            commands.
+	x1z   Information -  These are replies to requests for
+          	information, such as status or help.
+	x2z   Connections - Replies referring to the control and
+          	data connections.
+	x3z   Authentication and accounting - Replies for the login
+          	process and accounting procedures.
+	x4z   Unspecified as yet.
+	x5z   File system - These replies indicate the status of the
+    	  Server file system vis-a-vis the requested transfer or
+        	other file system action.
+
+The third digit gives a finer gradation of meaning in each of the function categories, specified by the second digit
+	
+		 200 Command okay.
+         500 Syntax error, command unrecognized, line too long.
+         501 Syntax error in parameters or arguments.
+         202 Command not implemented, superfluous at this site.
+         502 Command not implemented.
+         503 Bad sequence of commands.
+         504 Command not implemented for that parameter.
+         
+         110 Restart marker reply.
+         211 System status, or system help reply.
+         212 Directory status.
+         213 File status.
+         214 Help message.
+         215 NAME system type.
+         
+         120 Service ready in nnn minutes.
+         220 Service ready for new user.
+         221 Service closing control connection. Logged out if appropriate.
+         421 Service not available, closing control connection.
+         125 Data connection already open; transfer starting.
+         225 Data connection open; no transfer in progress.
+         425 Can't open data connection.
+         226 Closing data connection. Successful transfer
+         426 Connection closed; transfer aborted.
+         227 Entering Passive Mode (h1,h2,h3,h4,p1,p2).
+	
+		 230 User logged in, proceed.
+         530 Not logged in.
+         331 User name okay, need password.
+         
+         150 File status okay; about to open data connection.
+         250 Requested file action okay, completed.
+         257 "PATHNAME" created.
+         350 Requested file action pending further information.
+         450 Requested file action not taken. File unavailable (e.g., file busy).
+         550 Requested action not taken. File unavailable (e.g., file not found, no access).
+         451 Requested action aborted. Local error in processing.
+         551 Requested action aborted. Page type unknown.
+         452 Requested action not taken. Insufficient storage space in system.
+         552 Requested file action aborted. Exceeded storage allocation.
+         553 Requested action not taken. File name not allowed.
+
+MINIMUM IMPLEMENTATION:
+
+      In order to make FTP workable without needless error messages, the
+      following minimum implementation is required for all servers:
+
+         TYPE - ASCII Non-print
+         MODE - Stream
+         STRUCTURE - File, Record
+         COMMANDS - USER, 
+         			QUIT, 
+         			PORT,
+                    TYPE,
+                    MODE, 
+                    STRU,
+                for the default values
+                    RETR, 
+                    STOR,
+                    NOOP.
+
+      The default values for transfer parameters are:
+
+         TYPE - ASCII Non-print
+         MODE - Stream
+         STRU - File
+	
+EXAMPLE:
+		 CWD /usr/dm
+         200 directory changed to /usr/dm
+         MKD pathname
+         257 "/usr/dm/pathname" directory created
+	
+MY ARCHITECTURE:
+
+Server.listen()
+
++na svaki accept kreiraj thread i pokreni taj thread.
+
++Cuvaj i txt fajlu sve info o useru. ID JE USERNAME
++Napravi Client object i serializuj u fajl, pa po loginu deserializuj taj object.
+
++Ako se loginovao izadje mu user meni.
++Odnosno komande koje moze da izvrsi:
+[USER:]	
+	ACCT <username> - retrieves info about that username
+	CWD  [ChangeWorkingDirectory]		- cd <path>
+	CDUP [ChangeToParentDirectory]		- cd ..
+	QUIT [LOGOUT]						- exit
+	RETR [Retrieve]						- Request a file
+	STOR [Store]						- Store a file, if it exists it gets replaced
+	STOU [StoreUnique]					- Store a file, if exists create unique name
+	APPE [Append]						- Append to a file
+	RNFR [RenameFrom]					- Request renaming a file
+	RNTO [RenameTo]						- Follow RNFR with a name to which it should rename
+	ABOR [Abort]						- Abort current transfer of data
+	DELE [Delete]						- Delete a file
+	RMD  [DemoveDirectory]				- Remove directory
+	MKD  [MakeDirectory]				- Create directory
+	PWD  [PrintWorkingDirectory]		- Request path of current directory
+	LIST [List]							- List out filenames and dirnames in cwd 										or info about file
+	NLST [NameList]						- List only filenames in cwd
+	HELP [Help]							- Request help
+	NOOP [Noop]							- NOP instruction reply with OK
+
+[ADMIN:]
+	No restrictions to one directory
+	Can manipulate everything and type in SERVER commands S_EXIT...
+
+[OBICNIUSER:]
+	Maximum 5 files stored
+
+[PREMIUMUSER:]
+	No restrictions based on number of files stored.
+	Kreira foldere
+	Menja naziv folderima
+	Prebaci datoteku u drugi folder
+	Brisati folder ako je prazan
+ 	
+[ADDITIONAL:] 
+	OpcijaDeljenjaPristupa, 
+	OpcijaDeljenjaLinka-PrekoKojegCeNeregistrovaniKorisniciImatiPristupFajlovima
+	
+
+[Prijava na disk:] [Uspesno/Neuspesno:] [While isLogedIn!=true]
+CLI: When connected user sends either USER <username> OR USERG <username> to specify if he is 
+	using CONSOLE or GUI and to initiate registration/logging in.
+SERV: If username exists "331 Username Okay, need password" if not 530 Login or passwd incorrect
+
+CLI: Next instruction is supposed to be PASS <password> to login/register
+SERV: If password correct "230 User logged in proceed" same for if registered, if not 530
+	
+Prijavljen!!!
+
+Drvo komandi odavde - SWITCH dok ceka input od usera, SPLITUJE KOMANDU i gleda [0] sta je
+
+Za slanje fajla pravi novi thread koji otvori port i salje dok ne dodje do kraja tad se gasi.
+
+
+
+
+
+
+
+
+
+
+
+
+	
+			
