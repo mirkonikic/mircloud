@@ -6,8 +6,6 @@ Encrypted file storage and synchronization service, that can be used localy and 
 ![alt text](Untitled.png)
 <!--<img src="https://cdn.discordapp.com/attachments/205245036084985857/481213000540225550/full_example.gif"  alt="Full Example"/>-->
 
-Designed for macOS Sierra and High Sierra. *Not yet tested on macOS Mojave, but I'm working on updating it!*
-
 **Usage**
 ---
 
