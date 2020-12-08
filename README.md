@@ -22,6 +22,16 @@ Options:
   -h                         Show this message and exit.
 ```
 
+**Commands**
+---
+```
+Client:
+  ls, echo, pwd, file, cd, whoami, exit
+  TO ADD: touch, retrieve, upload, mv, cp, rm, server_cmd's...
+Admin:
+  EXIT, PRINT <argument>, LIST [NAME/CON/INET/DIR/PWD/PRIVS/ALL], MSG [ID/NAME <argument>], KICK [ID/NAME <argument>]
+```
+
 **Installation Options**
 ---
 
@@ -52,6 +62,8 @@ This is free, open-source software. If you'd like to support the development of 
 - [ ] Encrypted       - No Sniffing of data or MITM attacks (When finished)
 - [ ] Privacy         - No one except you will know what files are you sending on server (When finished)
 - [x] Remote Controll - If isAdministrator is set to true, you can use this program for Remote Control
+- [ ] Privileges      - Three levels of privileges: basic, premium and administrator. Basic -> uploaded files set and cant manage, premium -> within his dir all and admin has all privs.
 - [x] > Google Drive  - While Google and other Drives Limit your storage size, with this program you can use your whole Drive
 - [x] Multi-User      - Multiple number of users logged in at the same time and not limited number of users registered
-  
+- [ ] Security        - Your server is protected against DoS/ResourceHoarding - if memory left on HOST is less than 5GB, server wont accept uploads. (When finished)
+- [ ] Multithreaded   - Fix problems that happen when not expected message comes your way. (When finished)
